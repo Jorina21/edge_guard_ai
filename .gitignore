@@ -1,0 +1,133 @@
+# ------------------------------
+# PYTHON / GENERAL
+# -------------------------------
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.swp
+.env
+.venv
+*.sqlite
+*.db
+*.log
+
+# Virtual environments
+iot_venv/
+.iota_venv/
+*.venv/
+venv/
+env/
+ENV/
+*env*/
+
+
+
+# -------------------------------
+# PROJECT-SPECIFIC
+# -------------------------------
+
+# TensorFlow / Keras checkpoints
+*.ckpt
+*.ckpt.*
+checkpoint
+saved_model/
+
+# TF Lite intermediate build files
+*.tflite.tmp
+*.pb
+*.pbtxt
+
+# Model artifacts created during experiments
+# (Keep the final models folder tracked: we will whitelist that below)
+models/*.h5
+models/*.keras
+models/*.ckpt
+models/variables/
+
+# Allow TFLite models & labels
+!models/*.tflite
+!models/*.txt
+!models/*.png
+
+
+# -------------------------------
+# DATASET (LARGE FILES)
+# -------------------------------
+
+# Raw images (not included in GitHub)
+data/raw/
+
+# Intermediate OpenImages downloads
+data/openimages_tmp/
+
+# Processed datasets
+data/processed/
+
+# Label file allowed (small)
+!data/labels.csv
+
+
+# -------------------------------
+# RASPBERRY PI
+# -------------------------------
+
+# Camera cache
+*.h264
+*.mp4
+*.avi
+*.yuv
+
+# Pi logs
+*.json
+*.cache
+
+# MQTT state or temp logs
+mqtt_logs/
+
+
+# -------------------------------
+# EDITORS / IDEs
+# -------------------------------
+
+# VSCode
+.vscode/
+**/.vscode/
+
+# JetBrains
+.idea/
+*.iml
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Linux temp
+*~
+*.tmp
+
+
+# -------------------------------
+# NODE / FRONTEND (future dashboard)
+# -------------------------------
+
+node_modules/
+dist/
+build/
+
+
+# -------------------------------
+# DOCKER (if used later)
+# -------------------------------
+
+docker-compose.override.yml
+*.tar
+*.gz
+
