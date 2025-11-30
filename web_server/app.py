@@ -102,8 +102,8 @@ def status():
     status_data["uptime"] += 1
 
     # Person count tracking via SORT
-    status_data["person_count"] = camera.tracker.last_count if hasattr(camera.tracker, "last_count") else 0
-    status_data["confidence"] = camera.tracker.last_conf if hasattr(camera.tracker, "last_conf") else 0.0
+    status_data["person_count"] = camera.person_count if hasattr(camera.tracker, "last_count") else 0
+    status_data["confidence"] = camera.person_conf if hasattr(camera.tracker, "last_conf") else 0.0
     status_data["last_seen"] = time.strftime("%H:%M:%S")
 
     # Grab last 20 events from DB

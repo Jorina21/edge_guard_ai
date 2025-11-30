@@ -35,7 +35,11 @@ class KalmanBoxTracker:
 
     def __init__(self, bbox, score=1.0):
         KalmanBoxTracker.count += 1
+      
         self.id = KalmanBoxTracker.count
+        
+        self.last_count = 0
+        self.last_conf = 0.0
 
         x1, y1, x2, y2 = bbox
         cx = (x1 + x2) / 2.0
