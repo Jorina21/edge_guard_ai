@@ -1,0 +1,56 @@
+body {
+    background: #0f0f0f;
+    color: white;
+    font-family: Arial;
+}
+
+.container {
+    width: 90%;
+    margin: auto;
+}
+
+.main-grid {
+    display: flex;
+    gap: 20px;
+}
+
+.video-card img {
+    width: 640px;
+    border: 3px solid #444;
+    border-radius: 6px;
+}
+
+.status-card {
+    width: 300px;
+    padding: 20px;
+    background: #1c1c1c;
+    border-radius: 8px;
+}
+
+.indicator {
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    font-size: 22px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.indicator.on {
+    background: #0f0;
+    color: black;
+}
+
+.indicator.off {
+    background: #f00;
+    color: white;
+}
+
+.event-log {
+    background: #1c1c1c;
+    padding: 10px;
+    height: 200px;
+    overflow-y: scroll;
+    border-radius: 6px;
+}
+

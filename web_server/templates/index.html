@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EdgeGuard AI – Dashboard</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+
+<div class="container">
+    <h1>EdgeGuard AI Security Dashboard</h1>
+
+    <div class="main-grid">
+        
+        <!-- Live Video Feed -->
+        <div class="card left">
+            <h2>Live Feed</h2>
+            <img id="video-stream" src="/video_feed">
+        </div>
+
+        <!-- System Status -->
+        <div class="card right">
+            <h2>Status</h2>
+
+            <div id="person-indicator" class="indicator off">NO PERSON</div>
+
+            <p><strong>FPS:</strong> <span id="fps">0</span></p>
+            <p><strong>Confidence:</strong> <span id="conf">0</span></p>
+            <p><strong>Last Seen:</strong> <span id="last_seen">--</span></p>
+            <p><strong>CPU Temp:</strong> <span id="temp">--</span> °C</p>
+            <p><strong>Uptime:</strong> <span id="uptime">--</span> sec</p>
+        </div>
+
+    </div>
+
+    <h2>Detection Events</h2>
+    <ul id="event-log" class="event-log"></ul>
+
+</div>
+
+<script src="/static/js/dashboard.js"></script>
+
+</body>
+</html>
+
