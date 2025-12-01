@@ -94,7 +94,6 @@ if __name__ == "__main__":
     init_db()
 
     print("[WEB] Starting camera background thread...")
-    threading.Thread(target=camera.background_loop, daemon=True).start()
-
+    
     print("[WEB] Running Flask at 0.0.0.0:5000")
     app.run(host="0.0.0.0", port=5000, debug=False, threaded=True)
