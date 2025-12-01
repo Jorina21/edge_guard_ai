@@ -2,30 +2,23 @@
 import os
 import sys
 import time
+import threading
 from flask import Flask, Response, jsonify, render_template
 
-# ============================================
-# FIX PYTHON PATH TO IMPORT FROM pi_app/
-# ============================================
+# Path fixes
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 PI_APP_DIR = os.path.join(BASE_DIR, "pi_app")
 sys.path.append(PI_APP_DIR)
 
-# --- Correct imports ---
+# Imports
 from ssd_mobilenet_detector import SSDMobilenetDetector
 from sort_tracker import SortTracker
 from video_feed import VideoCamera
-
-# --- Database functions ---
 from db import init_db, log_event, get_latest_events
 
 
-# ============================================
-# FLASK APP
-# ============================================
 app = Flask(__name__)
 
-# Global status for dashboard
 status_data = {
     "fps": 0.0,
     "confidence": 0.0,
@@ -36,9 +29,6 @@ status_data = {
 }
 
 
-# ============================================
-# CPU Temperature helper
-# ============================================
 def get_cpu_temp():
     try:
         out = os.popen("vcgencmd measure_temp").read()
@@ -47,66 +37,46 @@ def get_cpu_temp():
         return "--"
 
 
-# ============================================
-# INITIALIZE DETECTOR + TRACKER + CAMERA
-# ============================================
-print("[WEB] Initializing SSD Mobilenet Detector...")
+print("[WEB] Loading SSD Mobilenet...")
 detector = SSDMobilenetDetector(
     model_path=os.path.join(PI_APP_DIR, "detect.tflite"),
     label_path=os.path.join(PI_APP_DIR, "labelmap.txt"),
     score_threshold=0.4
 )
 
-print("[WEB] Initializing SORT tracker...")
+print("[WEB] Loading SORT tracker...")
 tracker = SortTracker(max_age=10, min_hits=3, iou_threshold=0.3)
 
-print("[WEB] Starting camera...")
+print("[WEB] Starting camera module...")
 camera = VideoCamera(detector, tracker)
 
 
-
-# ============================================
-# ROUTES
-# ============================================
+# ===============================
+# Routes
+# ===============================
 @app.route("/")
 def index():
     return render_template("index.html")
 
 
-
 @app.route("/video_feed")
 def video_feed():
-    """
-    Route streaming MJPEG frames from VideoCamera.generate()
-    """
     return Response(
         camera.generate(),
         mimetype="multipart/x-mixed-replace; boundary=frame"
     )
 
 
-
 @app.route("/status")
 def status():
-    """
-    Returns dashboard JSON containing:
-    - FPS
-    - Person count
-    - Latest events from SQLite
-    - CPU temp
-    - Uptime
-    """
-    # Update live server metrics
     status_data["fps"] = camera.fps
     status_data["cpu_temp"] = get_cpu_temp()
     status_data["uptime"] += 1
 
-    # Person count tracking via SORT
-    status_data["person_count"] = camera.person_count if hasattr(camera.tracker, "last_count") else 0
-    status_data["confidence"] = camera.person_conf if hasattr(camera.tracker, "last_conf") else 0.0
+    status_data["person_count"] = camera.person_count
+    status_data["confidence"] = camera.person_conf
     status_data["last_seen"] = time.strftime("%H:%M:%S")
 
-    # Grab last 20 events from DB
     events = get_latest_events(20)
     event_strings = [
         f"[{ts}] {count} person(s) — conf={conf:.2f} — {fps:.1f} FPS"
@@ -116,13 +86,15 @@ def status():
     return jsonify({**status_data, "events": event_strings})
 
 
-
-# ============================================
-# MAIN ENTRY POINT
-# ============================================
+# ===============================
+# MAIN
+# ===============================
 if __name__ == "__main__":
-    print("[WEB] Initializing database...")
+    print("[WEB] Initializing DB...")
     init_db()
 
-    print("[WEB] Flask server starting at http://0.0.0.0:5000 ...")
+    print("[WEB] Starting camera background thread...")
+    threading.Thread(target=camera.background_loop, daemon=True).start()
+
+    print("[WEB] Running Flask at 0.0.0.0:5000")
     app.run(host="0.0.0.0", port=5000, debug=False, threaded=True)
