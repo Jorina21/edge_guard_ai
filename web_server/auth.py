@@ -1,3 +1,3 @@
 USERNAME = "jorina"
 PASSWORD = "Johnorina11"
-SECRET_KEY = "super_secret_key_change_this"
+SECRET_KEY = "1234567890"
